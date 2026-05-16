@@ -1,8 +1,10 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
+  --background: #fafafa;
   --foreground: #171717;
+  --reader-bg: #f5f5f4;
+  --reader-page: #ffffff;
 }
 
 @theme inline {
@@ -16,11 +18,77 @@
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+    --reader-bg: #18181b;
+    --reader-page: #ffffff;
   }
+}
+
+html,
+body {
+  height: 100%;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
+
+.react-pdf__Page {
+  position: relative;
+  margin: 0 auto;
+  background: white;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.react-pdf__Page__textContent {
+  user-select: text;
+}
+.react-pdf__Page__textContent ::selection {
+  background: rgba(255, 230, 0, 0.4);
+}
+
+.pt-highlight {
+  position: absolute;
+  pointer-events: auto;
+  cursor: pointer;
+  mix-blend-mode: multiply;
+  border-radius: 2px;
+}
+.pt-highlight-yellow { background: rgba(255, 230, 0, 0.45); }
+.pt-highlight-green  { background: rgba(74, 222, 128, 0.45); }
+.pt-highlight-blue   { background: rgba(96, 165, 250, 0.45); }
+.pt-highlight-pink   { background: rgba(244, 114, 182, 0.45); }
+.pt-highlight-purple { background: rgba(192, 132, 252, 0.45); }
+.pt-highlight-orange { background: rgba(251, 146, 60, 0.5); }
+
+.thin-scrollbar::-webkit-scrollbar { width: 8px; height: 8px; }
+.thin-scrollbar::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 4px; }
+.thin-scrollbar::-webkit-scrollbar-track { background: transparent; }
+
+.textLayer {
+  position: absolute;
+  text-align: initial;
+  inset: 0;
+  overflow: hidden;
+  opacity: 0.25;
+  line-height: 1;
+  transform-origin: 0 0;
+  z-index: 2;
+}
+.textLayer span,
+.textLayer br {
+  color: transparent;
+  position: absolute;
+  white-space: pre;
+  cursor: text;
+  transform-origin: 0% 0%;
+}
+.textLayer ::selection {
+  background: rgba(0, 0, 255, 0.25);
+}
+.annotationLayer { position: absolute; inset: 0; }
