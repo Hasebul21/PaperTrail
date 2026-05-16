@@ -29,8 +29,11 @@ export function BookUpload({ onUploaded }: { onUploaded: (book: BookDTO) => void
         setPending(true);
         setProgress(0);
 
+        const safeName =
+            file.name.replace(/[^a-zA-Z0-9._-]+/g, "_").replace(/_+/g, "_") || "file.pdf";
+
         try {
-            const blob = await upload(file.name, file, {
+            const blob = await upload(safeName, file, {
                 access: "public",
                 handleUploadUrl: "/api/blob/upload",
                 contentType: file.type,
