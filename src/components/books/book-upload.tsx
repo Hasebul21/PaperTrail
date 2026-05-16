@@ -29,8 +29,9 @@ export function BookUpload({ onUploaded }: { onUploaded: (book: BookDTO) => void
         setPending(true);
         setProgress(0);
 
-        const safeName =
+        const baseName =
             file.name.replace(/[^a-zA-Z0-9._-]+/g, "_").replace(/_+/g, "_") || "file.pdf";
+        const safeName = `books/${Date.now()}-${Math.random().toString(36).slice(2, 8)}-${baseName}`;
 
         try {
             const blob = await upload(safeName, file, {

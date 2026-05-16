@@ -17,7 +17,6 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
                     allowedContentTypes: ["application/pdf"],
                     maximumSizeInBytes: 50 * 1024 * 1024,
                     tokenPayload: JSON.stringify({ userId: user.id }),
-                    addRandomSuffix: true,
                 };
             },
         });
