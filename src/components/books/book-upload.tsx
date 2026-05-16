@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import { toast } from "sonner";
 import { Upload, Loader2 } from "lucide-react";
+import { upload } from "@vercel/blob/client";
 import { Button } from "@/components/ui/button";
 import type { BookDTO } from "@/lib/types";
 
@@ -15,7 +16,7 @@ export function BookUpload({ onUploaded }: { onUploaded: (book: BookDTO) => void
         inputRef.current?.click();
     }
 
-    function handleFile(file: File) {
+    async function handleFile(file: File) {
         if (file.type !== "application/pdf") {
             toast.error("Only PDF files are supported.");
             return;
@@ -24,37 +25,40 @@ export function BookUpload({ onUploaded }: { onUploaded: (book: BookDTO) => void
             toast.error("File too large (max 50 MB).");
             return;
         }
-        const fd = new FormData();
-        fd.append("file", file);
 
         setPending(true);
         setProgress(0);
 
-        const xhr = new XMLHttpRequest();
-        xhr.open("POST", "/api/books");
-        xhr.upload.onprogress = (e) => {
-            if (e.lengthComputable) setProgress(Math.round((e.loaded / e.total) * 100));
-        };
-        xhr.onload = () => {
+        try {
+            const blob = await upload(file.name, file, {
+                access: "public",
+                handleUploadUrl: "/api/blob/upload",
+                contentType: file.type,
+                onUploadProgress: (e) => setProgress(Math.round(e.percentage)),
+            });
+
+            const res = await fetch("/api/books", {
+                method: "POST",
+                headers: { "content-type": "application/json" },
+                body: JSON.stringify({
+                    url: blob.url,
+                    fileName: file.name,
+                    size: file.size,
+                }),
+            });
+            if (!res.ok) {
+                const msg = (await res.json().catch(() => null))?.error ?? "Upload failed";
+                throw new Error(msg);
+            }
+            const data = (await res.json()) as { book: BookDTO };
+            toast.success("Book uploaded");
+            onUploaded(data.book);
+        } catch (e) {
+            toast.error((e as Error).message || "Upload failed");
+        } finally {
             setPending(false);
             setProgress(0);
-            if (xhr.status >= 200 && xhr.status < 300) {
-                const data = JSON.parse(xhr.responseText) as { book: BookDTO };
-                toast.success("Book uploaded");
-                onUploaded(data.book);
-            } else {
-                let msg = "Upload failed";
-                try {
-                    msg = (JSON.parse(xhr.responseText)?.error as string) ?? msg;
-                } catch { }
-                toast.error(msg);
-            }
-        };
-        xhr.onerror = () => {
-            setPending(false);
-            toast.error("Network error during upload");
-        };
-        xhr.send(fd);
+        }
     }
 
     return (

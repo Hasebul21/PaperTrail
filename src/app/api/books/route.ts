@@ -1,10 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
 import { requireUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
-import { uploadPdf } from "@/lib/storage";
-import { handleZod, jsonError } from "@/lib/api";
+import { handleZod } from "@/lib/api";
 
-const MAX_SIZE = 50 * 1024 * 1024; // 50 MB
+const createBookSchema = z.object({
+    url: z.string().url(),
+    fileName: z.string().min(1).max(512),
+    title: z.string().trim().max(512).optional(),
+    size: z.number().int().nonnegative(),
+});
 
 export async function GET() {
     try {
@@ -22,26 +27,23 @@ export async function GET() {
 export async function POST(req: NextRequest) {
     try {
         const user = await requireUser();
-        const form = await req.formData();
-        const file = form.get("file");
-        const titleInput = (form.get("title") as string | null)?.trim();
-        if (!(file instanceof File)) return jsonError("No file uploaded", 400);
-        if (file.type !== "application/pdf") return jsonError("Only PDF files are supported", 400);
-        if (file.size > MAX_SIZE) return jsonError("File too large (max 50 MB)", 400);
-
-        const buf = await file.arrayBuffer();
-        const uploaded = await uploadPdf(file.name, new Blob([buf], { type: file.type }), file.type);
-
-        const title = titleInput || file.name.replace(/\.pdf$/i, "");
+        const data = createBookSchema.parse(await req.json());
+        const title = data.title?.trim() || data.fileName.replace(/\.pdf$/i, "");
+        let fileKey = data.url;
+        try {
+            fileKey = new URL(data.url).pathname.replace(/^\//, "");
+        } catch {
+            // keep url as key fallback
+        }
         const book = await prisma.book.create({
             data: {
                 userId: user.id,
                 title,
-                fileName: file.name,
-                fileUrl: uploaded.url,
-                fileKey: uploaded.key,
-                mimeType: file.type,
-                size: file.size,
+                fileName: data.fileName,
+                fileUrl: data.url,
+                fileKey,
+                mimeType: "application/pdf",
+                size: data.size,
             },
         });
         return NextResponse.json({ book }, { status: 201 });
