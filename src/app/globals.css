@@ -45,9 +45,11 @@ body {
   border-radius: 4px;
   overflow: hidden;
 }
+
 .react-pdf__Page__textContent {
   user-select: text;
 }
+
 .react-pdf__Page__textContent ::selection {
   background: rgba(255, 230, 0, 0.4);
 }
@@ -59,16 +61,44 @@ body {
   mix-blend-mode: multiply;
   border-radius: 2px;
 }
-.pt-highlight-yellow { background: rgba(255, 230, 0, 0.45); }
-.pt-highlight-green  { background: rgba(74, 222, 128, 0.45); }
-.pt-highlight-blue   { background: rgba(96, 165, 250, 0.45); }
-.pt-highlight-pink   { background: rgba(244, 114, 182, 0.45); }
-.pt-highlight-purple { background: rgba(192, 132, 252, 0.45); }
-.pt-highlight-orange { background: rgba(251, 146, 60, 0.5); }
 
-.thin-scrollbar::-webkit-scrollbar { width: 8px; height: 8px; }
-.thin-scrollbar::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 4px; }
-.thin-scrollbar::-webkit-scrollbar-track { background: transparent; }
+.pt-highlight-yellow {
+  background: rgba(255, 230, 0, 0.45);
+}
+
+.pt-highlight-green {
+  background: rgba(74, 222, 128, 0.45);
+}
+
+.pt-highlight-blue {
+  background: rgba(96, 165, 250, 0.45);
+}
+
+.pt-highlight-pink {
+  background: rgba(244, 114, 182, 0.45);
+}
+
+.pt-highlight-purple {
+  background: rgba(192, 132, 252, 0.45);
+}
+
+.pt-highlight-orange {
+  background: rgba(251, 146, 60, 0.5);
+}
+
+.thin-scrollbar::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.thin-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 4px;
+}
+
+.thin-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
 
 .textLayer {
   position: absolute;
@@ -80,6 +110,7 @@ body {
   transform-origin: 0 0;
   z-index: 2;
 }
+
 .textLayer span,
 .textLayer br {
   color: transparent;
@@ -88,7 +119,12 @@ body {
   cursor: text;
   transform-origin: 0% 0%;
 }
+
 .textLayer ::selection {
   background: rgba(0, 0, 255, 0.25);
 }
-.annotationLayer { position: absolute; inset: 0; }
+
+.annotationLayer {
+  position: absolute;
+  inset: 0;
+}

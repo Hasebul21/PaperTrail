@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 
 export default async function ReaderLayout({ children }: { children: React.ReactNode }) {
-  const session = await auth();
-  if (!session?.user) redirect("/sign-in");
-  return <>{children}</>;
+    const session = await auth();
+    if (!session?.user) redirect("/sign-in");
+    return <>{children}</>;
 }

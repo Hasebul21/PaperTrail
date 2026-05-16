@@ -9,20 +9,20 @@ export const PopoverTrigger = PopoverPrimitive.Trigger;
 export const PopoverAnchor = PopoverPrimitive.Anchor;
 
 export const PopoverContent = React.forwardRef<
-  React.ElementRef<typeof PopoverPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof PopoverPrimitive.Content>
+    React.ElementRef<typeof PopoverPrimitive.Content>,
+    React.ComponentPropsWithoutRef<typeof PopoverPrimitive.Content>
 >(({ className, align = "center", sideOffset = 4, ...props }, ref) => (
-  <PopoverPrimitive.Portal>
-    <PopoverPrimitive.Content
-      ref={ref}
-      align={align}
-      sideOffset={sideOffset}
-      className={cn(
-        "z-50 w-72 rounded-md border border-neutral-200 bg-white p-4 text-neutral-900 shadow-md outline-none dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-100",
-        className
-      )}
-      {...props}
-    />
-  </PopoverPrimitive.Portal>
+    <PopoverPrimitive.Portal>
+        <PopoverPrimitive.Content
+            ref={ref}
+            align={align}
+            sideOffset={sideOffset}
+            className={cn(
+                "z-50 w-72 rounded-md border border-neutral-200 bg-white p-4 text-neutral-900 shadow-md outline-none dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-100",
+                className
+            )}
+            {...props}
+        />
+    </PopoverPrimitive.Portal>
 ));
 PopoverContent.displayName = "PopoverContent";
