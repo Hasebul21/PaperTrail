@@ -34,6 +34,7 @@ export function BookUpload({ onUploaded }: { onUploaded: (book: BookDTO) => void
                 access: "public",
                 handleUploadUrl: "/api/blob/upload",
                 contentType: file.type,
+                multipart: true,
                 onUploadProgress: (e) => setProgress(Math.round(e.percentage)),
             });
 

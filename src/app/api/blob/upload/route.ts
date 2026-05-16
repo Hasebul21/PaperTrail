@@ -20,9 +20,6 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
                     addRandomSuffix: true,
                 };
             },
-            onUploadCompleted: async () => {
-                // DB row is created by the client via POST /api/books after upload completes.
-            },
         });
         return NextResponse.json(json);
     } catch (e) {
